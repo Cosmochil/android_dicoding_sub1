@@ -16,6 +16,9 @@
         android:theme="@style/Theme.DicodingGitProfile"
         tools:targetApi="31">
         <activity
+            android:name=".ui.details.UserInfoActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>

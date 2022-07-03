@@ -17,6 +17,11 @@ import kotlinx.android.synthetic.main.git_user_row.view.*
 class UserListAdapter: RecyclerView.Adapter<UserListAdapter.UserViewHolder>() {
 
     private val list = ArrayList<Users>()
+    private var onUserClickCallback: OnUserClickCallback? = null
+
+    fun setOnUserClickCallback(onUserClickCallback: OnUserClickCallback) {
+        this.onUserClickCallback = onUserClickCallback
+    }
 
     fun setList(users: ArrayList<Users>) {
         list.clear()
@@ -26,6 +31,10 @@ class UserListAdapter: RecyclerView.Adapter<UserListAdapter.UserViewHolder>() {
 
     inner class UserViewHolder(val binding: GitUserRowBinding ): RecyclerView.ViewHolder(binding.root) {
         fun bind(users: Users) {
+            binding.root.setOnClickListener {
+                onUserClickCallback?.onUserClicked(users)
+            }
+
             binding.apply{
                 Glide.with(itemView)
                     .load(users.avatar_url)
@@ -49,5 +58,9 @@ class UserListAdapter: RecyclerView.Adapter<UserListAdapter.UserViewHolder>() {
     }
 
     override fun getItemCount(): Int = list.size
+
+    interface OnUserClickCallback {
+        fun onUserClicked(data: Users)
+    }
 
 }

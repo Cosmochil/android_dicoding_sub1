@@ -1,5 +1,6 @@
 package com.example.dicodinggitprofile.ui.main
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
@@ -10,6 +11,7 @@ import com.example.dicodinggitprofile.databinding.ActivityMainBinding
 import com.example.dicodinggitprofile.model.GitResponse
 import com.example.dicodinggitprofile.model.Users
 import com.example.dicodinggitprofile.services.GitInterface
+import com.example.dicodinggitprofile.ui.details.UserInfoActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,6 +30,16 @@ class MainActivity : AppCompatActivity() {
 
         adapter = UserListAdapter()
         adapter.notifyDataSetChanged()
+        adapter.setOnUserClickCallback(object : UserListAdapter.OnUserClickCallback {
+            override fun onUserClicked(data: Users) {
+                Intent(this@MainActivity, UserInfoActivity::class.java).also {
+                    it.putExtra(UserInfoActivity.EXTRA_LOGIN, data.login)
+                    startActivity(it)
+                }
+            }
+
+        })
+
         viewModel = ViewModelProvider(
             this,
             ViewModelProvider.NewInstanceFactory()
@@ -53,10 +65,9 @@ class MainActivity : AppCompatActivity() {
 
         }
         viewModel.getSearchUser().observe(this, {
-            if( it != null) {
+            if (it != null) {
                 adapter.setList(it)
                 showLoading(false)
-
             }
         })
     }
